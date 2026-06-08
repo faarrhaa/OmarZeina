@@ -38,7 +38,6 @@ body{
   --pink-light:#fce4ec; /* Pale Shell Pink */
   --cream:#004d40;      /* Deep Seaweed Green for text */
   --text-sand:#5d4037;  /* Driftwood Brown for subheadings */
-  /* ── Semi-transparent backgrounds (0.50 opacity) ── */
   --bg:rgba(240, 253, 244, 0.50);         
   --bg-mid:rgba(224, 242, 241, 0.50);     
   --bg-card:rgba(255,255,255,0.60); 
@@ -61,6 +60,7 @@ body{
 @keyframes rsvpPop{0%{transform:scale(.78);opacity:0}60%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
 @keyframes endingDrift{0%{transform:translateY(20px);opacity:0}15%{opacity:.65}85%{opacity:.65}100%{transform:translateY(-130px);opacity:0}}
 @keyframes waveAnim{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes pearlGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(255,255,255,0.6))}50%{filter:drop-shadow(0 0 24px rgba(255,255,255,1))}}
 
 /* ── Loading ── */
 #loading-screen{
@@ -95,8 +95,38 @@ body{
 .wave-stripe{position:absolute;left:0;right:0;height:8px;overflow:hidden;}
 .wave-stripe.top{top:0;} .wave-stripe.bottom{bottom:0;}
 .wave-stripe-inner{height:100%;width:200%;background:repeating-linear-gradient(90deg,var(--teal-light) 0,var(--teal-light) 18px,rgba(255,255,255,0.5) 18px,rgba(255,255,255,0.5) 28px,var(--sand) 28px,var(--sand) 38px,rgba(255,255,255,0.5) 38px,rgba(255,255,255,0.5) 48px);animation:waveAnim 4s linear infinite;opacity:.65;}
+
 .shell-wrap{position:relative;z-index:2;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(0,151,167,.35));}
-.touch-label{position:relative;z-index:2;margin-top:10px;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--ocean-deep);animation:pulseBeat 2.1s ease-in-out infinite;}
+
+/* ── Shell Mouth Opening & Pearl Setup ── */
+.shell-lid, .shell-base{transform-box:fill-box;}
+.shell-lid{transform-origin:bottom center;transition:transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);}
+.shell-base{transform-origin:top center;transition:transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);}
+
+#pearl{opacity:0;transform:scale(0.5);transform-box:fill-box;transform-origin:center;transition:all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;}
+#pearl text{opacity:0;transition:opacity 0.5s ease 0.9s;}
+
+/* Glow Transition Overlay */
+#glow-transition{
+  position:absolute;top:50%;left:50%;width:40px;height:40px;
+  border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0) 70%);
+  transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none;z-index:10;
+  transition:all 1.5s cubic-bezier(0.215,.61,.355,1);
+}
+
+/* ── Triggered Open State ── */
+.is-opening .shell-wrap{animation-play-state:paused;}
+/* 2D Simulation of 3D mouth opening */
+.is-opening .shell-lid{transform: translateY(-40px) scaleY(0.5) rotate(-8deg);}
+.is-opening .shell-base{transform: translateY(15px) scaleY(0.85) rotate(4deg);}
+
+.is-opening #pearl{opacity:1;transform:scale(1);animation:pearlGlow 2s ease-in-out infinite;}
+.is-opening #pearl text{opacity:1;}
+.is-opening .touch-label{opacity:0;transition:opacity 0.3s;}
+.is-glowing #glow-transition{transform:translate(-50%,-50%) scale(50);opacity:1;}
+.is-fading #dancer-screen{opacity:0;transition:opacity 0.8s ease-out;}
+
+.touch-label{position:relative;z-index:2;margin-top:10px;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--ocean-deep);animation:pulseBeat 2.1s ease-in-out infinite;transition:opacity 0.3s;}
 .touch-main{font-family:'Dancing Script',cursive;font-size:clamp(44px,9vw,68px);color:var(--ocean-deep);text-align:center;position:relative;z-index:2;text-shadow:0 0 24px rgba(0,151,167,.25);line-height:1;}
 .touch-sub{font-size:12px;letter-spacing:4px;color:var(--teal);text-transform:uppercase;animation:shimmer 3s ease-in-out infinite;position:relative;z-index:2;margin-top:10px;}
 
@@ -252,8 +282,8 @@ textarea.f-input{resize:vertical;min-height:100px;}
 
 <!-- Music -->
 <audio id="bgm" loop preload="auto">
-  <source src="bach.mp3" type="audio/mpeg">
-  <source src="bach.m4a" type="audio/mp4">
+  <source src="music.mp3" type="audio/mpeg">
+  <source src="music.m4a" type="audio/mp4">
 </audio>
 <button id="music-btn" onclick="toggleMusic()" title="Toggle music">🔇</button>
 
@@ -266,18 +296,41 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div id="dancer-stars"></div>
 
   <div class="shell-wrap">
-    <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+    <svg width="180" height="200" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="shellG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e0f7fa"/><stop offset="50%" stop-color="#26c6da"/><stop offset="100%" stop-color="#0097a7"/></linearGradient>
+        <linearGradient id="shellG" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e0f7fa"/><stop offset="50%" stop-color="#26c6da"/><stop offset="100%" stop-color="#0097a7"/>
+        </linearGradient>
+        <radialGradient id="pearlG" cx="40%" cy="40%">
+          <stop offset="0%" stop-color="#ffffff"/><stop offset="50%" stop-color="#f0f4f8"/><stop offset="100%" stop-color="#c8dae8"/>
+        </radialGradient>
         <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <path d="M90 160 C 30 160, 10 100, 10 70 C 10 30, 50 10, 90 10 C 130 10, 170 30, 170 70 C 170 100, 150 160, 90 160 Z" fill="url(#shellG)" filter="url(#glow)"/>
-      <path d="M90 10 L 90 160 M 40 35 L 90 160 M 140 35 L 90 160 M 20 75 L 90 160 M 160 75 L 90 160 M 25 120 L 90 160 M 155 120 L 90 160" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/>
-      <circle cx="90" cy="90" r="12" fill="rgba(255,255,255,0.6)"/>
-      <path d="M30 170 Q 50 140 90 160 Q 130 140 150 170" stroke="#00838f" stroke-width="2" fill="rgba(0,131,143,0.2)"/>
-      <path d="M90 160 L 75 180 M 90 160 L 90 180 M 90 160 L 105 180" stroke="#d4a373" stroke-width="3" fill="none" stroke-linecap="round"/>
+      
+      <!-- Bottom Shell Jaw -->
+      <g class="shell-base">
+        <path d="M 10 70 C 10 110, 40 175, 90 180 C 140 175, 170 110, 170 70 Z" fill="url(#shellG)" filter="url(#glow)"/>
+        <path d="M10 70 L 90 180 M 25 105 L 90 180 M 155 105 L 90 180 M 50 150 L 90 180 M 130 150 L 90 180" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/>
+        <path d="M40 190 Q 60 160 90 180 Q 120 160 140 190" stroke="#00838f" stroke-width="2" fill="rgba(0,131,143,0.2)"/>
+        <path d="M90 180 L 75 200 M 90 180 L 105 200 M 90 180 L 90 200" stroke="#d4a373" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+      
+      <!-- Pearl with Initials -->
+      <g id="pearl">
+        <circle cx="90" cy="85" r="24" fill="url(#pearlG)" />
+        <text x="90" y="85" text-anchor="middle" dy="0.35em" font-family="'Dancing Script', cursive" font-size="24" fill="#0097a7" font-weight="700">O&Z</text>
+      </g>
+      
+      <!-- Top Shell Jaw -->
+      <g class="shell-lid">
+        <path d="M 10 70 C 10 30, 50 10, 90 10 C 130 10, 170 30, 170 70 Z" fill="url(#shellG)" filter="url(#glow)"/>
+        <path d="M90 10 L 90 70 M 40 35 L 90 70 M 140 35 L 90 70" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/>
+      </g>
     </svg>
   </div>
+
+  <!-- Glow Transition Element (Centered on screen) -->
+  <div id="glow-transition"></div>
 
   <p class="touch-main">Omar & Zeina</p>
   <p class="touch-sub">Request the pleasure of your company 🐚</p>
@@ -564,23 +617,38 @@ function spawnConfetti() {
   }
 }
 
-/* ── Open Invitation ── */
+/* ── Open Invitation (Mouth Opening + Pearl Glow Sequence) ── */
+let isOpening = false;
 function openInvitation() {
   const screen = document.getElementById('dancer-screen');
-  screen.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-  screen.style.opacity = '0';
-  screen.style.transform = 'scale(0.95)';
-  spawnConfetti();
-  fadeInMusic();
-  setTimeout(() => {
-    screen.style.display = 'none';
-    const inv = document.getElementById('invitation');
-    inv.style.display = 'block';
-    startCountdown();
+  if(isOpening) return; 
+  isOpening = true;
 
-    initScrollReveal();
-    initCinematicEnding();
-  }, 600);
+  // 1. Trigger shell mouth to open and reveal pearl
+  screen.classList.add('is-opening');
+
+  // 2. Wait for the mouth to open and O&Z pearl to glow (1.8s)
+  setTimeout(() => {
+    // 3. Trigger the expanding white glow from the pearl
+    screen.classList.add('is-glowing');
+    
+    // 4. Shortly after glow starts, fade out the text/shell behind it
+    setTimeout(() => {
+      screen.classList.add('is-fading');
+      fadeInMusic();
+      spawnConfetti();
+    }, 600);
+
+    // 5. Once glow covers screen, swap to main invitation
+    setTimeout(() => {
+      screen.style.display = 'none';
+      const inv = document.getElementById('invitation');
+      inv.style.display = 'block';
+      startCountdown();
+      initScrollReveal();
+      initCinematicEnding();
+    }, 1500);
+  }, 1800); 
 }
 
 /* ── Save Date ── */
@@ -641,10 +709,7 @@ function submitWish() {
     <div class="wish-text">"${text}"</div>
   `;
   
-  // Prepend to show newest first
   container.insertBefore(card, container.firstChild);
-
-  // Reset form
   document.getElementById('wish-name').value = '';
   document.getElementById('wish-text').value = '';
 }
