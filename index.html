@@ -19,9 +19,8 @@ body{
   color:#4a2b1b;
   overflow-x:hidden;
   background-color: #e0f7fa;
-  background-image:
-    url('bg.jpg'),
-    radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.7) 0%, rgba(224,247,250,0.8) 55%, rgba(128,222,234,0.8) 85%, rgba(255,248,225,0.9) 100%);
+  /* Removed bg.jpg which was covering the gradient. Exact same gradient as #dancer-screen */
+  background-image: radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.7) 0%, rgba(224,247,250,0.8) 55%, rgba(128,222,234,0.8) 85%, rgba(255,248,225,0.9) 100%);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -44,7 +43,7 @@ body{
   --pink-light:#fce4ec;
   --cream:#004d40;
   --text-sand:#5d4037;
-  --bg-card:rgba(255,255,255,0.55);
+  --bg-card:rgba(255,255,255,0.45);
   --card-border:rgba(77,208,225,0.35);
 }
 
@@ -161,7 +160,7 @@ body{
 .s-title{font-family:'Playfair Display',serif;color:var(--cream);font-size:clamp(22px,4vw,38px);margin-bottom:14px;font-weight:700;}
 .s-sub{font-style:italic;font-size:15px;color:var(--ocean-deep);max-width:460px;margin:0 auto;line-height:1.75;}
 
-/* ── INVITATION SECTIONS — nearly transparent, gradient shows through ── */
+/* ── INVITATION SECTIONS — completely transparent so body gradient shows ── */
 .glass-section{
   background:transparent;
 }
@@ -186,7 +185,7 @@ body{
 /* ── Schedule ── */
 .sched-item{display:flex;align-items:center;margin-bottom:28px;text-align:left;position:relative;}
 .sched-item:not(:last-child)::after{content:'';position:absolute;left:20px;top:42px;width:2px;height:28px;background:linear-gradient(to bottom,var(--teal-light),transparent);opacity:.45;}
-.sched-icon{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.85),rgba(224,247,250,0.6));color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:20px;border:1.5px solid rgba(77,208,225,.35);flex-shrink:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.sched-icon{width:44px;height:44px;border-radius:50%;background:transparent;color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:20px;border:1.5px solid rgba(77,208,225,.35);flex-shrink:0;}
 .sched-det h4{font-family:'Playfair Display',serif;color:var(--cream);font-size:16px;font-weight:700;}
 .sched-det p{font-size:14px;color:var(--ocean-deep);font-style:italic;margin-top:3px;}
 
@@ -228,7 +227,7 @@ body{
 /* ── Forms & Inputs ── */
 .form-wrap{background:var(--bg-card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:20px;padding:28px;border:1.5px solid var(--card-border);box-shadow:0 8px 32px rgba(0,151,167,.12);max-width:480px;margin:32px auto 0;}
 .f-label{font-family:'Playfair Display',serif;font-size:12px;color:var(--teal);letter-spacing:1px;font-weight:700;display:block;margin-bottom:8px;text-align:left;}
-.f-input{font-family:'DM Sans',sans-serif;outline:none;background:rgba(224, 247, 250, 0.65);color:var(--cream);border:1.5px solid rgba(0,151,167,.3);padding:12px 16px;border-radius:12px;width:100%;font-size:15px;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+.f-input{font-family:'DM Sans',sans-serif;outline:none;background:rgba(224, 247, 250, 0.5);color:var(--cream);border:1.5px solid rgba(0,151,167,.3);padding:12px 16px;border-radius:12px;width:100%;font-size:15px;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
 .f-input::placeholder{color:rgba(0,77,64,.35);}
 .f-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,151,167,.15);}
 textarea.f-input{resize:vertical;min-height:100px;}
@@ -246,7 +245,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
 
 /* ── Note from Couple ── */
 #note-section{padding:72px 24px;text-align:center;}
-.note-card{max-width:560px;margin:0 auto;background:rgba(255,252,249,0.45);border-radius:24px;padding:48px 36px;border:1.5px solid rgba(77,208,225,.2);box-shadow:0 12px 48px rgba(0,151,167,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.note-card{max-width:560px;margin:0 auto;background:transparent;border-radius:24px;padding:48px 36px;border:1.5px solid rgba(77,208,225,.2);box-shadow:0 12px 48px rgba(0,151,167,.08);}
 .note-text{font-size:17px;line-height:1.9;color:var(--cream);margin-bottom:16px;}
 .note-sign{font-family:'Dancing Script',cursive;font-size:28px;color:var(--teal);margin-top:24px;font-weight:700;}
 
