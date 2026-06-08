@@ -261,17 +261,21 @@ textarea.f-input{resize:vertical;min-height:100px;}
   .dress-cards{flex-direction:column;align-items:center;}
   .dress-card{min-width:240px;}
   .touch-sub{text-align:center !important; width:100%; display:block;}
-  #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.2),rgba(0,77,64,.45)) !important;}
-  body{background-attachment: scroll; background: #e0f7fa url('bg.jpg') no-repeat center top / cover !important;}
-  /* Reduce section overlay opacity so bg.jpg shows through more */
-  .hero-section{background:rgba(255,248,225,0.25) !important;}
-  #dress-section{background:rgba(224,242,241,0.25) !important;}
-  #rules-section{background:rgba(240,253,244,0.25) !important;}
-  #spicy-section{background:rgba(224,242,241,0.25) !important;}
-  #wishes-section{background:rgba(224,247,250,0.25) !important;}
-  #rsvp-section{background:rgba(255,248,225,0.25) !important;}
-  #note-section{background:rgba(224,247,250,0.25) !important;}
-  #cinematic-ending{background:rgba(128,222,234,0.25) !important;}
+  /* Beach background: keep fixed attachment so bg scrolls with parallax feel */
+  body{background: #e0f7fa url('bg.jpg') no-repeat center center fixed !important; background-size: cover !important;}
+  /* Venue overlay - lighter so beach photo is visible */
+  #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.25),rgba(0,77,64,.5)) !important;}
+  /* All section overlays significantly reduced so bg.jpg beach shines through */
+  .hero-section{background:rgba(255,248,225,0.15) !important;}
+  #dress-section{background:rgba(224,242,241,0.15) !important;}
+  #rules-section{background:rgba(240,253,244,0.15) !important;}
+  #spicy-section{background:rgba(224,242,241,0.15) !important;}
+  #wishes-section{background:rgba(224,247,250,0.15) !important;}
+  #rsvp-section{background:rgba(255,248,225,0.15) !important;}
+  #note-section{background:rgba(224,247,250,0.15) !important;}
+  #cinematic-ending{background:rgba(128,222,234,0.15) !important;}
+  /* Inline-styled sections (quote, timeline, countdown) */
+  section.reveal-section{background:rgba(240,253,244,0.15) !important;}
 }
 </style>
 </head>
@@ -301,10 +305,9 @@ textarea.f-input{resize:vertical;min-height:100px;}
 
 <!-- Music -->
 <audio id="bgm" loop preload="auto" playsinline webkit-playsinline x-webkit-airplay="allow">
-  <source src="music.mp3" type="audio/mpeg">
   <source src="music.m4a" type="audio/mp4">
 </audio>
-<button id="music-btn" onclick="toggleMusic()" title="Toggle music">🔇</button>
+<button id="music-btn" onclick="toggleMusic()" title="Toggle music">▶</button>
 
 <!-- ══════════════════════════════════════
      OPENING SCREEN
