@@ -261,21 +261,23 @@ textarea.f-input{resize:vertical;min-height:100px;}
   .dress-cards{flex-direction:column;align-items:center;}
   .dress-card{min-width:240px;}
   .touch-sub{text-align:center !important; width:100%; display:block;}
-  /* Beach background: keep fixed attachment so bg scrolls with parallax feel */
+  /* Beach background: fixed so bg.jpg stays visible across all sections */
   body{background: #e0f7fa url('bg.jpg') no-repeat center center fixed !important; background-size: cover !important;}
-  /* Venue overlay - lighter so beach photo is visible */
-  #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.25),rgba(0,77,64,.5)) !important;}
-  /* All section overlays significantly reduced so bg.jpg beach shines through */
-  .hero-section{background:rgba(255,248,225,0.15) !important;}
-  #dress-section{background:rgba(224,242,241,0.15) !important;}
-  #rules-section{background:rgba(240,253,244,0.15) !important;}
-  #spicy-section{background:rgba(224,242,241,0.15) !important;}
-  #wishes-section{background:rgba(224,247,250,0.15) !important;}
-  #rsvp-section{background:rgba(255,248,225,0.15) !important;}
-  #note-section{background:rgba(224,247,250,0.15) !important;}
-  #cinematic-ending{background:rgba(128,222,234,0.15) !important;}
-  /* Inline-styled sections (quote, timeline, countdown) */
-  section.reveal-section{background:rgba(240,253,244,0.15) !important;}
+  /* Venue overlay - very light so beach photo shows */
+  #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.15),rgba(0,77,64,.35)) !important;}
+  /* All named sections fully transparent */
+  .hero-section{background:rgba(255,248,225,0.05) !important;}
+  #dress-section{background:rgba(224,242,241,0.05) !important;}
+  #rules-section{background:rgba(240,253,244,0.05) !important;}
+  #spicy-section{background:rgba(224,242,241,0.05) !important;}
+  #wishes-section{background:rgba(224,247,250,0.05) !important;}
+  #rsvp-section{background:rgba(255,248,225,0.05) !important;}
+  #note-section{background:rgba(224,247,250,0.05) !important;}
+  #cinematic-ending{background:rgba(128,222,234,0.05) !important;}
+  /* All reveal-sections (quote, timeline, countdown, etc) — covers inline styles */
+  #invitation section,
+  #invitation > section,
+  .reveal-section{background:rgba(255,255,255,0.05) !important;}
 }
 </style>
 </head>
