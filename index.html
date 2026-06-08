@@ -13,34 +13,42 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 
-/* ── Full Page Shore Background ── */
+/* ── Full Page Shore Background — matches opening screen gradient ── */
 body{
   font-family:'DM Sans',sans-serif;
   color:#4a2b1b;
   overflow-x:hidden;
-  background: #e0f7fa url('bg.jpg') no-repeat center center fixed;
+  /* Fallback solid color */
+  background-color: #e0f7fa;
+  /* If bg.jpg loads, it overlays the gradient. If not, the gradient shows perfectly. */
+  background-image:
+    url('bg.jpg'),
+    radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.72) 0%, rgba(224,247,250,0.82) 55%, rgba(128,222,234,0.82) 85%, rgba(255,248,225,0.88) 100%);
   background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 :root{
-  --ocean:#26c6da;      /* Clear Turquoise Water */
-  --ocean-deep:#00838f; /* Deep Sea Teal */
-  --ocean-mid:#4dd0e1;  /* Shallow Seafoam */
-  --coral:#d4a373;      /* Warm Sand Accent */
-  --coral-light:#81c784;/* Soft Seaside Sage */
-  --coral-pale:#e0f7fa; /* Soft Foam Blue */
-  --sand:#d4a373;       /* Wet Sand */
-  --sand-light:#ffecb3; /* Sun-kissed Dry Sand */
-  --sand-pale:#fff8e1;  /* Pale Sandy White */
-  --teal:#0097a7;       /* Deep Lagoon Teal */
-  --teal-light:#4dd0e1; /* Shoreline Teal */
-  --pink:#f8bbd0;       /* Seashell Pink */
-  --pink-light:#fce4ec; /* Pale Shell Pink */
-  --cream:#004d40;      /* Deep Seaweed Green for text */
-  --text-sand:#5d4037;  /* Driftwood Brown for subheadings */
-  --bg:rgba(240, 253, 244, 0.30);         
-  --bg-mid:rgba(224, 242, 241, 0.30);     
-  --bg-card:rgba(255,255,255,0.55); 
+  --ocean:#26c6da;
+  --ocean-deep:#00838f;
+  --ocean-mid:#4dd0e1;
+  --coral:#d4a373;
+  --coral-light:#81c784;
+  --coral-pale:#e0f7fa;
+  --sand:#d4a373;
+  --sand-light:#ffecb3;
+  --sand-pale:#fff8e1;
+  --teal:#0097a7;
+  --teal-light:#4dd0e1;
+  --pink:#f8bbd0;
+  --pink-light:#fce4ec;
+  --cream:#004d40;
+  --text-sand:#5d4037;
+  --bg:rgba(255, 255, 255, 0.38);
+  --bg-mid:rgba(224, 247, 250, 0.42);
+  --bg-card:rgba(255,255,255,0.55);
   --card-border:rgba(77,208,225,0.35);
 }
 
@@ -100,19 +108,15 @@ body{
   position:relative;z-index:2;
   animation:float 4s ease-in-out infinite;
   filter:drop-shadow(0 8px 24px rgba(0,151,167,.35));
-  perspective:400px;        /* gives the lid its 3D depth */
+  perspective:400px;
   perspective-origin:50% 70%;
 }
 
-/* ── Shell Opening — box-lid style ── */
 .shell-lid, .shell-base{transform-box:fill-box;}
-
-/* Top jaw: pivot from its BOTTOM edge (the hinge line at y≈70) — swings up and back */
 .shell-lid{
   transform-origin:50% 100%;
   transition:transform 1.15s cubic-bezier(0.34, 1.3, 0.64, 1);
 }
-/* Bottom jaw: stays almost still, just a tiny drop for realism */
 .shell-base{
   transform-origin:50% 0%;
   transition:transform 1.15s cubic-bezier(0.34, 1.3, 0.64, 1);
@@ -121,7 +125,6 @@ body{
 #pearl{opacity:0;transform:scale(0.5);transform-box:fill-box;transform-origin:center;transition:all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;}
 #pearl text{opacity:0;transition:opacity 0.5s ease 0.9s;}
 
-/* Glow Transition Overlay */
 #glow-transition{
   position:absolute;top:50%;left:50%;width:40px;height:40px;
   border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0) 70%);
@@ -129,13 +132,9 @@ body{
   transition:all 1.5s cubic-bezier(0.215,.61,.355,1);
 }
 
-/* ── Triggered Open State ── */
 .is-opening .shell-wrap{animation-play-state:paused;}
-/* Lid swings backward like a box lid — rotateX from its bottom edge */
 .is-opening .shell-lid{transform:rotateX(-145deg);}
-/* Bottom stays put, tiny downward settle */
 .is-opening .shell-base{transform:translateY(4px);}
-
 .is-opening #pearl{opacity:1;transform:scale(1);animation:pearlGlow 2s ease-in-out infinite;}
 .is-opening #pearl text{opacity:1;}
 .is-opening .touch-label{opacity:0;transition:opacity 0.3s;}
@@ -166,13 +165,23 @@ body{
 .s-title{font-family:'Playfair Display',serif;color:var(--cream);font-size:clamp(22px,4vw,38px);margin-bottom:14px;font-weight:700;}
 .s-sub{font-style:italic;font-size:15px;color:var(--ocean-deep);max-width:460px;margin:0 auto;line-height:1.75;}
 
+/* ── Glass section cards — consistent with opening page ── */
+.glass-section{
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,0.45);
+  border-bottom:1px solid rgba(255,255,255,0.25);
+}
+
 /* ── Hero ── */
 .hero-section{
-  background:rgba(255, 248, 225, 0.30);
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  background:rgba(255,255,255,0.38);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   padding:80px 24px 64px;text-align:center;position:relative;overflow:hidden;
+  border-top:1px solid rgba(255,255,255,0.5);
+  border-bottom:1px solid rgba(255,255,255,0.3);
 }
-.hero-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,151,167,.1) 0%,transparent 60%);pointer-events:none;}
+.hero-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,151,167,.08) 0%,transparent 60%);pointer-events:none;}
 
 /* ── Countdown ── */
 .cbox{background:var(--bg-card);border-radius:16px;padding:20px 18px;min-width:82px;text-align:center;box-shadow:0 4px 24px rgba(0,151,167,.1);border:1.5px solid rgba(77,208,225,.35);transition:transform .2s,box-shadow .2s;}
@@ -188,12 +197,12 @@ body{
 /* ── Schedule ── */
 .sched-item{display:flex;align-items:center;margin-bottom:28px;text-align:left;position:relative;}
 .sched-item:not(:last-child)::after{content:'';position:absolute;left:20px;top:42px;width:2px;height:28px;background:linear-gradient(to bottom,var(--teal-light),transparent);opacity:.45;}
-.sched-icon{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.9),var(--bg-mid));color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:20px;border:1.5px solid rgba(77,208,225,.35);flex-shrink:0;}
+.sched-icon{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.9),rgba(224,247,250,0.5));color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:20px;border:1.5px solid rgba(77,208,225,.35);flex-shrink:0;}
 .sched-det h4{font-family:'Playfair Display',serif;color:var(--cream);font-size:16px;font-weight:700;}
 .sched-det p{font-size:14px;color:var(--ocean-deep);font-style:italic;margin-top:3px;}
 
 /* ── Dress Code ── */
-#dress-section{padding:72px 24px;text-align:center;background:rgba(224, 242, 241, 0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);position:relative;overflow:hidden;}
+#dress-section{padding:72px 24px;text-align:center;position:relative;overflow:hidden;}
 .dress-cards{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;max-width:700px;margin:40px auto 0;}
 .dress-card{flex:1;min-width:180px;max-width:220px;border-radius:20px;padding:32px 20px;text-align:center;transition:transform .3s,box-shadow .3s;cursor:default;box-shadow:0 8px 24px rgba(0,77,64,.15);border:1.5px solid rgba(255,255,255,0.25);}
 .dress-card:hover{transform:translateY(-7px);}
@@ -202,13 +211,13 @@ body{
 .dress-desc{font-size:12px;color:rgba(255,255,255,.9);letter-spacing:1px;line-height:1.5;}
 
 /* ── Rules Section ── */
-#rules-section{background:var(--bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;}
+#rules-section{padding:72px 24px;text-align:center;}
 .rule-item{display:flex;align-items:center;gap:16px;max-width:480px;margin:0 auto 18px;text-align:left;}
 .rule-dot{width:8px;height:8px;border-radius:50%;background:var(--teal-light);flex-shrink:0;}
 .rule-text{font-size:15px;color:var(--cream);line-height:1.6;font-weight:500;}
 
 /* ── Spicy Touches ── */
-#spicy-section{background:var(--bg-mid);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;overflow:hidden;}
+#spicy-section{padding:72px 24px;text-align:center;overflow:hidden;}
 .spicy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:920px;margin:40px auto 0;}
 .spicy-card{background:var(--bg-card);border-radius:20px;padding:32px 24px;text-align:left;border:1.5px solid var(--card-border);box-shadow:0 8px 32px rgba(0,151,167,.08);transition:transform .3s,box-shadow .3s,border-color .3s;position:relative;overflow:hidden;backdrop-filter:blur(12px);}
 .spicy-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,151,167,.06),rgba(255,236,179,.06));opacity:0;transition:opacity .3s;}
@@ -219,7 +228,7 @@ body{
 .spicy-desc{font-size:14px;color:var(--ocean-deep);font-style:italic;line-height:1.7;position:relative;z-index:1;}
 
 /* ── Wishes Wall ── */
-#wishes-section{background:rgba(224, 247, 250, 0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;overflow:hidden;}
+#wishes-section{padding:72px 24px;text-align:center;overflow:hidden;}
 .wishes-form{max-width:480px;margin:32px auto 0;}
 .wishes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;max-width:800px;margin:40px auto 0;text-align:left;}
 .wish-card{background:var(--bg-card);border-radius:16px;padding:24px;border:1.5px solid var(--card-border);box-shadow:0 8px 24px rgba(0,151,167,.1);position:relative;overflow:hidden;}
@@ -243,17 +252,17 @@ textarea.f-input{resize:vertical;min-height:100px;}
 .gold-btn:hover{background:linear-gradient(135deg,#0097a7,#26c6da);color:#fff;border-color:transparent;box-shadow:0 8px 24px rgba(0,151,167,.35);}
 
 /* ── RSVP ── */
-#rsvp-section{background:rgba(255, 248, 225, 0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;}
+#rsvp-section{padding:72px 24px;text-align:center;}
 #rsvp-confirm{display:none;margin-top:32px;}
 
 /* ── Note from Couple ── */
-#note-section{background:rgba(224, 247, 250, 0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;}
-.note-card{max-width:560px;margin:0 auto;background:rgba(255,252,249,0.60);border-radius:24px;padding:48px 36px;border:1.5px solid rgba(77,208,225,.25);box-shadow:0 12px 48px rgba(0,151,167,.12);}
+#note-section{padding:72px 24px;text-align:center;}
+.note-card{max-width:560px;margin:0 auto;background:rgba(255,252,249,0.55);border-radius:24px;padding:48px 36px;border:1.5px solid rgba(77,208,225,.25);box-shadow:0 12px 48px rgba(0,151,167,.12);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
 .note-text{font-size:17px;line-height:1.9;color:var(--cream);margin-bottom:16px;}
 .note-sign{font-family:'Dancing Script',cursive;font-size:28px;color:var(--teal);margin-top:24px;font-weight:700;}
 
 /* ── Cinematic Ending ── */
-#cinematic-ending{background:rgba(128, 222, 234, 0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:130px 24px;text-align:center;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:420px;}
+#cinematic-ending{padding:130px 24px;text-align:center;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:420px;}
 .ending-quote{font-family:'Dancing Script',cursive;font-size:clamp(22px,4vw,38px);color:var(--cream);max-width:640px;line-height:1.85;opacity:0;transform:translateY(22px);transition:opacity 2s ease,transform 2s ease;z-index:2;text-shadow:0 0 22px rgba(0,151,167,.25);}
 #cinematic-ending.revealed .ending-quote{opacity:1;transform:translateY(0);}
 .ending-stars{position:absolute;inset:0;pointer-events:none;}
@@ -265,6 +274,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
 .save-date-btn{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:14px 36px;font-family:'DM Sans',sans-serif;font-size:14px;letter-spacing:1px;font-weight:500;background:transparent;color:var(--teal);border:1.5px solid var(--teal);border-radius:50px;cursor:pointer;transition:all .3s;text-decoration:none;}
 .save-date-btn:hover{background:linear-gradient(135deg,#0097a7,#26c6da);color:#fff;border-color:transparent;box-shadow:0 8px 24px rgba(0,151,167,.25);}
 
+/* ── Mobile ── */
 @media(max-width:600px){
   .cbox{
     width: calc(25% - 8px);
@@ -277,20 +287,14 @@ textarea.f-input{resize:vertical;min-height:100px;}
   .dress-cards{flex-direction:column;align-items:center;}
   .dress-card{min-width:240px;}
   .touch-sub{text-align:center !important; width:100%; display:block;}
-  body{background: #e0f7fa url('bg.jpg') no-repeat center center fixed !important; background-size: cover !important;}
   #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.2),rgba(0,77,64,.4)) !important;}
-  /* Named sections */
+  /* Slightly more opaque on mobile for readability over bright gradient */
   .hero-section,
-  .sec-bg,
-  #dress-section,
-  #rules-section,
-  #spicy-section,
-  #wishes-section,
-  #rsvp-section,
-  #note-section,
-  #cinematic-ending,
-  .reveal-section{
-    background:rgba(255,255,255,0.06) !important;
+  .glass-section{
+    background:rgba(255,255,255,0.42) !important;
+  }
+  .note-card{
+    background:rgba(255,252,249,0.6) !important;
   }
 }
 </style>
@@ -366,7 +370,6 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </svg>
   </div>
 
-  <!-- Glow Transition Element (Centered on screen) -->
   <div id="glow-transition"></div>
 
   <p class="touch-main">Omar & Zeina</p>
@@ -417,7 +420,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   </section>
 
   <!-- ── QUOTE ── -->
-  <section class="reveal-section sec-bg" style="background:rgba(224,247,250,0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:52px 24px;text-align:center;">
+  <section class="reveal-section glass-section" style="padding:52px 24px;text-align:center;">
     <p class="reveal-child rd1" style="font-family:'Dancing Script',cursive;font-size:clamp(20px,4vw,32px);color:var(--cream);max-width:600px;margin:0 auto;line-height:1.75;">"Whatever our souls are made of, his and mine are the same."</p>
     <p class="reveal-child rd2" style="font-size:12px;color:var(--teal);margin-top:14px;letter-spacing:4px;text-transform:uppercase;font-weight:700;">— Emily Brontë 💌</p>
   </section>
@@ -425,7 +428,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="wave-div"></div>
 
   <!-- ── WEDDING DAY TIMELINE ── -->
-  <section class="reveal-section sec-bg" style="background:rgba(240,253,244,0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;">
+  <section class="reveal-section glass-section" style="padding:72px 24px;text-align:center;">
     <span class="reveal-child rd1 s-label">Wedding Day</span>
     <h2 class="reveal-child rd2 s-title">Order of Events 🐚</h2>
     <div class="reveal-child rd3" style="max-width:480px;margin:36px auto 0;text-align:left;">
@@ -440,7 +443,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="sand-div"></div>
 
   <!-- ── COUNTDOWN ── -->
-  <section class="reveal-section sec-bg" style="background:rgba(240,253,244,0.30);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:72px 24px;text-align:center;">
+  <section class="reveal-section glass-section" style="padding:72px 24px;text-align:center;">
     <span class="reveal-child rd1 s-label">Counting Down till</span>
     <h2 class="reveal-child rd2 s-title">The Big Day 🌊</h2>
     <div class="reveal-child rd3" style="display:flex;justify-content:center;gap:clamp(6px,2vw,24px);flex-wrap:nowrap;width:100%;max-width:400px;margin:0 auto;">
@@ -472,7 +475,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="sand-div"></div>
 
   <!-- ── DRESS CODE ── -->
-  <section id="dress-section" class="reveal-section">
+  <section id="dress-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">Attire</span>
     <h2 class="reveal-child rd2 s-title">Coastal Elegance 🌺</h2>
     <p class="reveal-child rd3 s-sub">Dress to impress with a touch of ocean breeze.</p>
@@ -506,7 +509,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="sand-div"></div>
 
   <!-- ── RULES ── -->
-  <section id="rules-section" class="reveal-section">
+  <section id="rules-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">Beach Club Rules</span>
     <h2 class="reveal-child rd2 s-title">The Coastal Code 🐚</h2>
     <p class="reveal-child rd3 s-sub">A few house rules for an unforgettable night.</p>
@@ -522,7 +525,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="wave-div"></div>
 
   <!-- ── SPICY TOUCHES ── -->
-  <section id="spicy-section" class="reveal-section">
+  <section id="spicy-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">Celebration</span>
     <h2 class="reveal-child rd2 s-title">Reception Highlights 🪸</h2>
     <p class="reveal-child rd3 s-sub">What to expect when the sun goes down.</p>
@@ -539,7 +542,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="sand-div"></div>
 
   <!-- ── NOTE FROM THE COUPLE ── -->
-  <section id="note-section" class="reveal-section">
+  <section id="note-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">A Message</span>
     <h2 class="reveal-child rd2 s-title">💌 Note from the Couple</h2>
     <div class="reveal-child rd3 note-card">
@@ -554,7 +557,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   <div class="wave-div"></div>
 
   <!-- ── WISHES WALL ── -->
-  <section id="wishes-section" class="reveal-section">
+  <section id="wishes-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">Leave Your Mark</span>
     <h2 class="reveal-child rd2 s-title">Wishes Wall 💌</h2>
     <p class="reveal-child rd3 s-sub">Drop your favorite memory, advice, or wish for the couple!</p>
@@ -572,14 +575,13 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </div>
 
     <div id="wishes-display" class="wishes-grid" style="margin-top:40px;">
-      <!-- Wishes will appear here -->
     </div>
   </section>
 
   <div class="sand-div"></div>
 
   <!-- ── RSVP ── -->
-  <section id="rsvp-section" class="reveal-section">
+  <section id="rsvp-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">Will you attend?</span>
     <h2 class="reveal-child rd2 s-title">RSVP 🌊</h2>
     <p class="reveal-child rd3 s-sub">Please let us know if you can join us before 30/6/2026.</p>
@@ -598,7 +600,7 @@ textarea.f-input{resize:vertical;min-height:100px;}
   </section>
 
   <!-- ── CINEMATIC ENDING ── -->
-  <section id="cinematic-ending" class="reveal-section">
+  <section id="cinematic-ending" class="reveal-section glass-section">
     <div class="ending-stars" id="ending-stars"></div>
     <div class="ending-particles" id="ending-particles"></div>
     <div class="ending-quote">
@@ -626,7 +628,6 @@ let musicStarted = false, muted = false;
 const bgm = document.getElementById('bgm');
 bgm.volume = 0;
 
-// Show button always on mobile for manual fallback
 const _musicBtn = document.getElementById('music-btn');
 if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
   _musicBtn.style.display = 'flex';
@@ -651,8 +652,6 @@ function startMusic() {
   }
 }
 
-function fadeInMusic() { startMusic(); }
-
 function toggleMusic() {
   const btn = document.getElementById('music-btn');
   if (!musicStarted) {
@@ -676,15 +675,13 @@ function spawnConfetti() {
   }
 }
 
-/* ── Open Invitation (Mouth Opening + Pearl Glow Sequence) ── */
+/* ── Open Invitation ── */
 let isOpening = false;
 function openInvitation() {
   const screen = document.getElementById('dancer-screen');
   if(isOpening) return; 
   isOpening = true;
 
-  // *** Play music IMMEDIATELY here, inside the user gesture, before any setTimeout ***
-  // This is the only reliable way to unlock audio on iOS/Android
   if (!musicStarted) {
     musicStarted = true;
     bgm.volume = 0;
@@ -699,21 +696,14 @@ function openInvitation() {
     });
   }
 
-  // 1. Trigger shell mouth to open and reveal pearl
   screen.classList.add('is-opening');
 
-  // 2. Wait for the mouth to open and O&Z pearl to glow (1.8s)
   setTimeout(() => {
-    // 3. Trigger the expanding white glow from the pearl
     screen.classList.add('is-glowing');
-    
-    // 4. Shortly after glow starts, fade out the text/shell behind it
     setTimeout(() => {
       screen.classList.add('is-fading');
       spawnConfetti();
     }, 600);
-
-    // 5. Once glow covers screen, swap to main invitation
     setTimeout(() => {
       screen.style.display = 'none';
       const inv = document.getElementById('invitation');
