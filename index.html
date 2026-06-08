@@ -13,14 +13,16 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 
-/* ── Full Page Shore Background — EXACT same gradient as opening screen ── */
+/* ── Full Page Shore Background — bg.jpg + Gradient overlay ── */
 body{
   font-family:'DM Sans',sans-serif;
   color:#4a2b1b;
   overflow-x:hidden;
   background-color: #e0f7fa;
-  /* Removed bg.jpg which was covering the gradient. Exact same gradient as #dancer-screen */
-  background-image: radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.7) 0%, rgba(224,247,250,0.8) 55%, rgba(128,222,234,0.8) 85%, rgba(255,248,225,0.9) 100%);
+  /* Gradient overlays the image. If bg.jpg loads, it tints it beautifully. If not, gradient is the background. */
+  background-image:
+    radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.7) 0%, rgba(224,247,250,0.8) 55%, rgba(128,222,234,0.8) 85%, rgba(255,248,225,0.9) 100%),
+    url('bg.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -86,10 +88,16 @@ body{
 .loading-dots span:nth-child(2){animation-delay:.2s;background:var(--teal);}
 .loading-dots span:nth-child(3){animation-delay:.4s;background:var(--ocean);}
 
-/* ── Opening Screen ── */
+/* ── Opening Screen — EXACT same background stack as body ── */
 #dancer-screen{
   min-height:100vh;
-  background:radial-gradient(ellipse at 50% 38%,rgba(255,255,255,0.7) 0%,rgba(224,247,250,0.8) 55%,rgba(128,222,234,0.8) 85%,rgba(255,248,225,0.9) 100%);
+  background-color: #e0f7fa;
+  background-image:
+    radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.7) 0%, rgba(224,247,250,0.8) 55%, rgba(128,222,234,0.8) 85%, rgba(255,248,225,0.9) 100%),
+    url('bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   cursor:pointer;position:relative;overflow:hidden;padding:40px 20px;
   user-select:none;-webkit-user-select:none;
@@ -160,7 +168,7 @@ body{
 .s-title{font-family:'Playfair Display',serif;color:var(--cream);font-size:clamp(22px,4vw,38px);margin-bottom:14px;font-weight:700;}
 .s-sub{font-style:italic;font-size:15px;color:var(--ocean-deep);max-width:460px;margin:0 auto;line-height:1.75;}
 
-/* ── INVITATION SECTIONS — completely transparent so body gradient shows ── */
+/* ── INVITATION SECTIONS — completely transparent so body background shows ── */
 .glass-section{
   background:transparent;
 }
