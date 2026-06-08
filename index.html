@@ -162,7 +162,7 @@ body{
 .cbox{background:var(--bg-card);border-radius:16px;padding:20px 18px;min-width:82px;text-align:center;box-shadow:0 4px 24px rgba(0,151,167,.1);border:1.5px solid rgba(77,208,225,.35);transition:transform .2s,box-shadow .2s;}
 .cbox:hover{transform:scale(1.06);box-shadow:0 8px 32px rgba(0,151,167,.25);}
 .cnum{font-size:clamp(30px,6vw,50px);font-weight:300;color:var(--teal);line-height:1;font-family:'Playfair Display',serif;}
-.clbl{font-size:11px;letter-spacing:3px;color:var(--sand-light);margin-top:6px;text-transform:uppercase;font-weight:500;}
+.clbl{font-size:11px;letter-spacing:3px;color:#004d40;margin-top:6px;text-transform:uppercase;font-weight:700;}
 
 /* ── Venue ── */
 #venue-bg{position:absolute;inset:-60px;background-size:cover;background-position:center;will-change:transform;}
@@ -256,13 +256,22 @@ textarea.f-input{resize:vertical;min-height:100px;}
     flex: 0 0 calc(25% - 8px);
     padding: 12px 4px;
   }
-  .cnum{font-size: clamp(20px, 6vw, 30px);}
-  .clbl{font-size: 9px; letter-spacing: 1px;}
+  .cnum{font-size: clamp(18px, 5.5vw, 28px);}
+  .clbl{font-size: 8px; letter-spacing: 0px; color:#004d40;}
   .dress-cards{flex-direction:column;align-items:center;}
   .dress-card{min-width:240px;}
   .touch-sub{text-align:center !important; width:100%; display:block;}
-  #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.25),rgba(0,77,64,.55)) !important;}
-  body{background-attachment: scroll;}
+  #venue-overlay{background:linear-gradient(to bottom,rgba(0,131,143,.2),rgba(0,77,64,.45)) !important;}
+  body{background-attachment: scroll; background: #e0f7fa url('bg.jpg') no-repeat center top / cover !important;}
+  /* Reduce section overlay opacity so bg.jpg shows through more */
+  .hero-section{background:rgba(255,248,225,0.25) !important;}
+  #dress-section{background:rgba(224,242,241,0.25) !important;}
+  #rules-section{background:rgba(240,253,244,0.25) !important;}
+  #spicy-section{background:rgba(224,242,241,0.25) !important;}
+  #wishes-section{background:rgba(224,247,250,0.25) !important;}
+  #rsvp-section{background:rgba(255,248,225,0.25) !important;}
+  #note-section{background:rgba(224,247,250,0.25) !important;}
+  #cinematic-ending{background:rgba(128,222,234,0.25) !important;}
 }
 </style>
 </head>
@@ -598,40 +607,42 @@ let musicStarted = false, muted = false;
 const bgm = document.getElementById('bgm');
 bgm.volume = 0;
 
-// On mobile, show the music button immediately so users can manually trigger
+// Show button always on mobile for manual fallback
 const _musicBtn = document.getElementById('music-btn');
-if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
   _musicBtn.style.display = 'flex';
   _musicBtn.textContent = '▶';
 }
 
-function fadeInMusic() {
+function startMusic() {
   if (musicStarted) return;
   musicStarted = true;
-  const btn = document.getElementById('music-btn');
+  bgm.volume = 0;
   const playPromise = bgm.play();
+  const btn = document.getElementById('music-btn');
   if (playPromise !== undefined) {
     playPromise.then(() => {
       let vol = 0;
-      const iv = setInterval(() => { vol = Math.min(vol+0.02, 0.6); bgm.volume = vol; if(vol>=0.6) clearInterval(iv); }, 100);
+      const iv = setInterval(() => { vol = Math.min(vol + 0.02, 0.6); bgm.volume = vol; if (vol >= 0.6) clearInterval(iv); }, 100);
       btn.style.display = 'flex'; btn.textContent = '🔊';
     }).catch(() => {
-      // Autoplay blocked (common on mobile) — show button for manual play
+      musicStarted = false;
       btn.style.display = 'flex'; btn.textContent = '▶';
-      musicStarted = false; // allow retry via button tap
     });
   }
 }
+
+function fadeInMusic() { startMusic(); }
+
 function toggleMusic() {
   const btn = document.getElementById('music-btn');
-  if(!musicStarted){
-    bgm.play().then(() => {
-      musicStarted = true;
-      bgm.volume = 0.6;
-      btn.textContent = '🔊';
-    }).catch(() => { btn.textContent = '▶'; });
-  } else if(muted){ bgm.muted=false; muted=false; btn.textContent='🔊'; }
-  else { bgm.muted=true; muted=true; btn.textContent='🔇'; }
+  if (!musicStarted) {
+    startMusic();
+  } else if (muted) {
+    bgm.muted = false; muted = false; btn.textContent = '🔊';
+  } else {
+    bgm.muted = true; muted = true; btn.textContent = '🔇';
+  }
 }
 
 /* ── Confetti ── */
@@ -653,6 +664,22 @@ function openInvitation() {
   if(isOpening) return; 
   isOpening = true;
 
+  // *** Play music IMMEDIATELY here, inside the user gesture, before any setTimeout ***
+  // This is the only reliable way to unlock audio on iOS/Android
+  if (!musicStarted) {
+    musicStarted = true;
+    bgm.volume = 0;
+    const btn = document.getElementById('music-btn');
+    bgm.play().then(() => {
+      let vol = 0;
+      const iv = setInterval(() => { vol = Math.min(vol + 0.02, 0.6); bgm.volume = vol; if (vol >= 0.6) clearInterval(iv); }, 100);
+      btn.style.display = 'flex'; btn.textContent = '🔊';
+    }).catch(() => {
+      musicStarted = false;
+      btn.style.display = 'flex'; btn.textContent = '▶';
+    });
+  }
+
   // 1. Trigger shell mouth to open and reveal pearl
   screen.classList.add('is-opening');
 
@@ -664,7 +691,6 @@ function openInvitation() {
     // 4. Shortly after glow starts, fade out the text/shell behind it
     setTimeout(() => {
       screen.classList.add('is-fading');
-      fadeInMusic();
       spawnConfetti();
     }, 600);
 
