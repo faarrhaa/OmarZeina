@@ -68,7 +68,14 @@ body::before {
 @keyframes rsvpPop{0%{transform:scale(.78);opacity:0}60%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
 @keyframes endingDrift{0%{transform:translateY(20px);opacity:0}15%{opacity:.65}85%{opacity:.65}100%{transform:translateY(-130px);opacity:0}}
 @keyframes waveAnim{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-@keyframes pearlGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(255,220,200,0.7))}50%{filter:drop-shadow(0 0 28px rgba(255,200,170,1))}}
+@keyframes pearlGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(255,220,200,0.7)) drop-shadow(0 0 18px rgba(255,255,255,0.5))}50%{filter:drop-shadow(0 0 32px rgba(255,200,170,1)) drop-shadow(0 0 52px rgba(255,240,230,0.8))}}
+@keyframes pearlBounceIn{0%{opacity:0;transform:scale(0) translateY(40px)}40%{opacity:1}60%{opacity:1;transform:scale(1.2) translateY(-10px)}80%{opacity:1;transform:scale(0.93) translateY(2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes sparkleFloat{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+@keyframes pearlRainbow{0%,100%{filter:drop-shadow(0 0 14px rgba(255,200,180,0.9)) drop-shadow(0 0 28px rgba(255,255,220,0.6))}33%{filter:drop-shadow(0 0 20px rgba(200,230,255,0.9)) drop-shadow(0 0 36px rgba(220,255,240,0.6))}66%{filter:drop-shadow(0 0 18px rgba(255,220,255,0.9)) drop-shadow(0 0 32px rgba(255,240,200,0.6))}}
+@keyframes bubbleRise{0%{transform:translateY(0) translateX(0);opacity:0.8}50%{transform:translateY(-50vh) translateX(12px);opacity:0.5}100%{transform:translateY(-110vh) translateX(-8px);opacity:0}}
+@keyframes seaFoamPop{0%{transform:translateY(100vh) scale(0.5);opacity:0}20%{opacity:1}100%{transform:translateY(-10vh) scale(1.2);opacity:0}}
+@keyframes sandWrite{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0% 0 0)}}
+@keyframes waveWash{0%{transform:translateX(-110%);opacity:0.7}60%{transform:translateX(110%);opacity:0.5}100%{transform:translateX(220%);opacity:0}}
 
 /* ── Loading ── */
 #loading-screen{
@@ -128,11 +135,19 @@ body::before {
 
 #pearl{
   opacity:0;
-  transform-origin: 130px 170px;
-  transform: scale(0.2);
-  transition: opacity 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.1s,
-              transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.1s;
+  transform-origin: 130px 172px;
+  transform: scale(0) translateY(40px);
+  will-change: transform, opacity;
 }
+#pearl.pearl-open {
+  animation: pearlBounceIn 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+#pearl.pearl-glow {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  animation: pearlRainbow 2.5s ease-in-out infinite;
+}
+#pearl-sparkles{position:absolute;pointer-events:none;top:0;left:0;width:100%;height:100%;}
 
 #glow-transition{
   position:absolute;top:50%;left:50%;width:40px;height:40px;
@@ -142,10 +157,8 @@ body::before {
 }
 
 .is-opening .shell-wrap{animation-play-state:paused;}
-/* Shell opens only a modest amount — just enough for pearl to peek */
 .is-opening .shell-lid{transform:rotateX(-62deg);}
 .is-opening .shell-base{transform:translateY(5px);}
-.is-opening #pearl{opacity:1;transform:scale(1);animation:pearlGlow 2s ease-in-out infinite 1.1s;}
 .is-opening .touch-label{opacity:0;transition:opacity 0.3s;}
 .is-glowing #glow-transition{transform:translate(-50%,-50%) scale(50);opacity:1;}
 .is-fading #dancer-screen{opacity:0;transition:opacity 0.8s ease-out;}
@@ -157,6 +170,28 @@ body::before {
 /* ── Dividers ── */
 .sand-div{height:2px;background:linear-gradient(90deg,transparent,var(--sand),var(--teal-light),var(--sand),transparent);}
 .wave-div{height:7px;background:repeating-linear-gradient(90deg,var(--teal-light) 0,var(--teal-light) 18px,rgba(255,255,255,0.8) 18px,rgba(255,255,255,0.8) 28px,var(--sand) 28px,var(--sand) 38px,rgba(255,255,255,0.8) 38px,rgba(255,255,255,0.8) 48px);opacity:.55;}
+
+/* ── SVG Wave Separators ── */
+.wave-sep{display:block;width:100%;overflow:hidden;line-height:0;margin:0;height:54px;}
+.wave-sep svg{display:block;width:100%;height:54px;}
+@keyframes waveShift{0%{transform:translateX(0)}100%{transform:translateX(-25%)}}
+.wave-sep .wave-move{animation:waveShift 6s linear infinite;}
+
+/* ── Tide Countdown ── */
+.cbox{position:relative;overflow:hidden;background:rgba(255,255,255,0.25);border-radius:16px;padding:20px 18px;min-width:82px;text-align:center;box-shadow:0 4px 24px rgba(0,151,167,.15);border:1.5px solid rgba(77,208,225,.45);transition:transform .2s,box-shadow .2s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.cbox:hover{transform:scale(1.06);box-shadow:0 8px 32px rgba(0,151,167,.25);}
+.cbox-tide{
+  position:absolute;bottom:0;left:0;right:0;
+  background:transparent;
+  border-radius:0 0 14px 14px;
+  transition:height 1s ease;
+  overflow:hidden;
+}
+.cbox-tide svg{position:absolute;bottom:0;left:0;width:200%;height:100%;animation:waveSlosh 2.5s linear infinite;}
+.cbox-tide-fill{position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(180deg,rgba(77,208,225,0.05) 0%,rgba(0,151,167,0.28) 100%);}
+@keyframes waveSlosh{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.cnum{position:relative;z-index:1;font-size:clamp(30px,6vw,50px);font-weight:300;color:var(--teal);line-height:1;font-family:'Playfair Display',serif;}
+.clbl{position:relative;z-index:1;font-size:11px;letter-spacing:3px;color:#004d40;margin-top:6px;text-transform:uppercase;font-weight:700;}
 
 /* ── Scroll Reveal ── */
 .reveal-section{opacity:0;transform:translateY(42px);transition:opacity 1.2s cubic-bezier(.215,.61,.355,1),transform 1.2s cubic-bezier(.215,.61,.355,1);}
@@ -187,12 +222,6 @@ body::before {
   padding:80px 24px 64px;text-align:center;position:relative;overflow:hidden;
 }
 .hero-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,151,167,.06) 0%,transparent 60%);pointer-events:none;}
-
-/* ── Countdown ── */
-.cbox{background:var(--bg-card);border-radius:16px;padding:20px 18px;min-width:82px;text-align:center;box-shadow:0 4px 24px rgba(0,151,167,.1);border:1.5px solid rgba(77,208,225,.35);transition:transform .2s,box-shadow .2s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
-.cbox:hover{transform:scale(1.06);box-shadow:0 8px 32px rgba(0,151,167,.25);}
-.cnum{font-size:clamp(30px,6vw,50px);font-weight:300;color:var(--teal);line-height:1;font-family:'Playfair Display',serif;}
-.clbl{font-size:11px;letter-spacing:3px;color:#004d40;margin-top:6px;text-transform:uppercase;font-weight:700;}
 
 /* ── Venue ── */
 #venue-bg{position:absolute;inset:-60px;background-size:cover;background-position:center;will-change:transform;}
@@ -236,8 +265,9 @@ body::before {
 #wishes-section{padding:72px 24px;text-align:center;overflow:hidden;}
 .wishes-form{max-width:480px;margin:32px auto 0;}
 .wishes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;max-width:800px;margin:40px auto 0;text-align:left;}
-.wish-card{background:var(--bg-card);border-radius:16px;padding:24px;border:1.5px solid var(--card-border);box-shadow:0 8px 24px rgba(0,151,167,.1);position:relative;overflow:hidden;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
-.wish-card::before{content:'🐚';position:absolute;top:-10px;right:-10px;font-size:60px;opacity:0.15;transform:rotate(20deg);}
+.wish-card{background:rgba(255,248,220,0.55);border-radius:16px;padding:24px;border:1.5px solid rgba(212,163,115,0.4);box-shadow:0 8px 24px rgba(0,151,167,.1);position:relative;overflow:hidden;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.wish-card::before{content:'🐚';position:absolute;top:-10px;right:-10px;font-size:60px;opacity:0.12;transform:rotate(20deg);}
+.wish-card .wave-wash{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(77,208,225,0.25),rgba(255,255,255,0.35),transparent);pointer-events:none;animation:waveWash 1.1s ease-out forwards;}
 .wish-name{font-family:'Dancing Script',cursive;font-size:22px;color:var(--teal);margin-bottom:8px;font-weight:700;}
 .wish-text{font-size:14px;color:var(--cream);line-height:1.6;font-style:italic;}
 
@@ -262,9 +292,27 @@ textarea.f-input{resize:vertical;min-height:100px;}
 
 /* ── Note from Couple ── */
 #note-section{padding:72px 24px;text-align:center;}
-.note-card{max-width:560px;margin:0 auto;background:transparent;border-radius:24px;padding:48px 36px;border:1.5px solid rgba(77,208,225,.2);box-shadow:0 12px 48px rgba(0,151,167,.08);}
-.note-text{font-size:17px;line-height:1.9;color:var(--cream);margin-bottom:16px;}
-.note-sign{font-family:'Dancing Script',cursive;font-size:28px;color:var(--teal);margin-top:24px;font-weight:700;}
+.note-card{
+  max-width:560px;margin:0 auto;
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-radius:28px;padding:52px 40px;
+  border:1.5px solid rgba(77,208,225,0.45);
+  box-shadow:0 16px 56px rgba(0,151,167,.18), 0 2px 16px rgba(255,255,255,0.4) inset;
+  position:relative;overflow:hidden;
+}
+.note-card::before{
+  content:'💍';position:absolute;font-size:120px;opacity:0.06;
+  top:-20px;right:-20px;transform:rotate(20deg);pointer-events:none;
+}
+.note-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(77,208,225,0.06) 0%,rgba(255,236,179,0.08) 100%);
+  pointer-events:none;
+}
+.note-text{font-size:17px;line-height:2;color:#004d40;margin-bottom:18px;position:relative;z-index:1;}
+.note-sign{font-family:'Dancing Script',cursive;font-size:32px;color:var(--teal);margin-top:28px;font-weight:700;position:relative;z-index:1;}
+.note-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--teal-light),var(--sand),transparent);margin:24px auto;border-radius:2px;}
 
 /* ── Cinematic Ending ── */
 #cinematic-ending{padding:130px 24px;text-align:center;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:420px;}
@@ -467,6 +515,9 @@ textarea.f-input{resize:vertical;min-height:100px;}
         <path d="M 108 177 C 108 188, 118 197, 130 197 C 142 197, 152 188, 152 177" fill="none" stroke="rgba(180,130,110,0.25)" stroke-width="2"/>
       </g>
 
+      <!-- Sparkles container for pearl reveal -->
+      <g id="pearl-sparkles"></g>
+
       <!-- ════════ BOTTOM BASE SHELL ════════ -->
       <g class="shell-base" filter="url(#shellShadow)">
         <!-- Main bottom fan body -->
@@ -582,7 +633,14 @@ textarea.f-input{resize:vertical;min-height:100px;}
     <p class="reveal-child rd2" style="font-size:12px;color:var(--teal);margin-top:14px;letter-spacing:4px;text-transform:uppercase;font-weight:700;">— Emily Brontë 💌</p>
   </section>
 
-  <div class="wave-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move">
+      <path d="M0 27 C120 10, 240 44, 360 27 C480 10, 600 44, 720 27 C840 10, 960 44, 1080 27 C1200 10, 1320 44, 1440 27 C1560 10, 1680 44, 1800 27 C1920 10, 2040 44, 2160 27 C2280 10, 2400 44, 2520 27 C2640 10, 2760 44, 2880 27" fill="none" stroke="rgba(77,208,225,0.45)" stroke-width="2.5"/>
+      <path d="M0 34 C120 17, 240 51, 360 34 C480 17, 600 51, 720 34 C840 17, 960 51, 1080 34 C1200 17, 1320 51, 1440 34 C1560 17, 1680 51, 1800 34 C1920 17, 2040 51, 2160 34 C2280 17, 2400 51, 2520 34 C2640 17, 2760 51, 2880 34" fill="none" stroke="rgba(212,163,115,0.35)" stroke-width="1.5"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── WEDDING DAY TIMELINE ── -->
   <section class="reveal-section glass-section" style="padding:72px 24px;text-align:center;">
@@ -597,22 +655,36 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </div>
   </section>
 
-  <div class="sand-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move" style="animation-duration:10s">
+      <path d="M0 30 C180 18, 360 42, 540 30 C720 18, 900 42, 1080 30 C1260 18, 1440 42, 1620 30 C1800 18, 1980 42, 2160 30 C2340 18, 2520 42, 2700 30 C2880 18, 3060 42, 3240 30" fill="none" stroke="rgba(212,163,115,0.5)" stroke-width="2"/>
+      <path d="M0 38 C180 26, 360 50, 540 38 C720 26, 900 50, 1080 38 C1260 26, 1440 50, 1620 38 C1800 26, 1980 50, 2160 38 C2340 26, 2520 50, 2700 38 C2880 26, 3060 50, 3240 38" fill="none" stroke="rgba(77,208,225,0.28)" stroke-width="1.2"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── COUNTDOWN ── -->
   <section class="reveal-section glass-section" style="padding:72px 24px;text-align:center;">
     <span class="reveal-child rd1 s-label">Counting Down till</span>
     <h2 class="reveal-child rd2 s-title">The Big Day 🌊</h2>
     <div class="reveal-child rd3" style="display:flex;justify-content:center;gap:clamp(6px,2vw,24px);flex-wrap:nowrap;width:100%;max-width:400px;margin:0 auto;">
-      <div class="cbox"><div class="cnum" id="cd-days">--</div><div class="clbl">Days</div></div>
-      <div class="cbox"><div class="cnum" id="cd-hours">--</div><div class="clbl">Hours</div></div>
-      <div class="cbox"><div class="cnum" id="cd-mins">--</div><div class="clbl">Minutes</div></div>
-      <div class="cbox"><div class="cnum" id="cd-secs">--</div><div class="clbl">Seconds</div></div>
+      <div class="cbox"><div class="cbox-tide" id="tide-days"><div class="cbox-tide-fill"></div><svg viewBox="0 0 200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 C25 10,50 30,75 20 C100 10,125 30,150 20 C175 10,200 30,225 20 L225 40 L0 40 Z" fill="rgba(77,208,225,0.45)"/><path d="M0 25 C30 15,60 35,90 25 C120 15,150 35,180 25 L180 40 L0 40 Z" fill="rgba(0,151,167,0.25)"/></svg></div><div class="cnum" id="cd-days">--</div><div class="clbl">Days</div></div>
+      <div class="cbox"><div class="cbox-tide" id="tide-hours"><div class="cbox-tide-fill"></div><svg viewBox="0 0 200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 C25 10,50 30,75 20 C100 10,125 30,150 20 C175 10,200 30,225 20 L225 40 L0 40 Z" fill="rgba(77,208,225,0.45)"/><path d="M0 25 C30 15,60 35,90 25 C120 15,150 35,180 25 L180 40 L0 40 Z" fill="rgba(0,151,167,0.25)"/></svg></div><div class="cnum" id="cd-hours">--</div><div class="clbl">Hours</div></div>
+      <div class="cbox"><div class="cbox-tide" id="tide-mins"><div class="cbox-tide-fill"></div><svg viewBox="0 0 200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 C25 10,50 30,75 20 C100 10,125 30,150 20 C175 10,200 30,225 20 L225 40 L0 40 Z" fill="rgba(77,208,225,0.45)"/><path d="M0 25 C30 15,60 35,90 25 C120 15,150 35,180 25 L180 40 L0 40 Z" fill="rgba(0,151,167,0.25)"/></svg></div><div class="cnum" id="cd-mins">--</div><div class="clbl">Minutes</div></div>
+      <div class="cbox"><div class="cbox-tide" id="tide-secs"><div class="cbox-tide-fill"></div><svg viewBox="0 0 200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 20 C25 10,50 30,75 20 C100 10,125 30,150 20 C175 10,200 30,225 20 L225 40 L0 40 Z" fill="rgba(77,208,225,0.45)"/><path d="M0 25 C30 15,60 35,90 25 C120 15,150 35,180 25 L180 40 L0 40 Z" fill="rgba(0,151,167,0.25)"/></svg></div><div class="cnum" id="cd-secs">--</div><div class="clbl">Seconds</div></div>
     </div>
     <p class="reveal-child rd4" style="margin-top:40px;font-style:italic;font-size:16px;color:var(--teal);">Every second brings us closer to forever ♡</p>
   </section>
 
-  <div class="sand-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move" style="animation-duration:10s">
+      <path d="M0 30 C180 18, 360 42, 540 30 C720 18, 900 42, 1080 30 C1260 18, 1440 42, 1620 30 C1800 18, 1980 42, 2160 30 C2340 18, 2520 42, 2700 30 C2880 18, 3060 42, 3240 30" fill="none" stroke="rgba(212,163,115,0.5)" stroke-width="2"/>
+      <path d="M0 38 C180 26, 360 50, 540 38 C720 26, 900 50, 1080 38 C1260 26, 1440 50, 1620 38 C1800 26, 1980 50, 2160 38 C2340 26, 2520 50, 2700 38 C2880 26, 3060 50, 3240 38" fill="none" stroke="rgba(77,208,225,0.28)" stroke-width="1.2"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── VENUE ── -->
   <section id="venue-section" class="reveal-section" style="position:relative;min-height:500px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
@@ -629,7 +701,14 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </div>
   </section>
 
-  <div class="sand-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move" style="animation-duration:10s">
+      <path d="M0 30 C180 18, 360 42, 540 30 C720 18, 900 42, 1080 30 C1260 18, 1440 42, 1620 30 C1800 18, 1980 42, 2160 30 C2340 18, 2520 42, 2700 30 C2880 18, 3060 42, 3240 30" fill="none" stroke="rgba(212,163,115,0.5)" stroke-width="2"/>
+      <path d="M0 38 C180 26, 360 50, 540 38 C720 26, 900 50, 1080 38 C1260 26, 1440 50, 1620 38 C1800 26, 1980 50, 2160 38 C2340 26, 2520 50, 2700 38 C2880 26, 3060 50, 3240 38" fill="none" stroke="rgba(77,208,225,0.28)" stroke-width="1.2"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── DRESS CODE ── -->
   <section id="dress-section" class="reveal-section glass-section">
@@ -661,7 +740,14 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </div>
   </section>
 
-  <div class="sand-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move" style="animation-duration:10s">
+      <path d="M0 30 C180 18, 360 42, 540 30 C720 18, 900 42, 1080 30 C1260 18, 1440 42, 1620 30 C1800 18, 1980 42, 2160 30 C2340 18, 2520 42, 2700 30 C2880 18, 3060 42, 3240 30" fill="none" stroke="rgba(212,163,115,0.5)" stroke-width="2"/>
+      <path d="M0 38 C180 26, 360 50, 540 38 C720 26, 900 50, 1080 38 C1260 26, 1440 50, 1620 38 C1800 26, 1980 50, 2160 38 C2340 26, 2520 50, 2700 38 C2880 26, 3060 50, 3240 38" fill="none" stroke="rgba(77,208,225,0.28)" stroke-width="1.2"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── RULES ── -->
   <section id="rules-section" class="reveal-section glass-section">
@@ -677,7 +763,14 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </div>
   </section>
 
-  <div class="wave-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move">
+      <path d="M0 27 C120 10, 240 44, 360 27 C480 10, 600 44, 720 27 C840 10, 960 44, 1080 27 C1200 10, 1320 44, 1440 27 C1560 10, 1680 44, 1800 27 C1920 10, 2040 44, 2160 27 C2280 10, 2400 44, 2520 27 C2640 10, 2760 44, 2880 27" fill="none" stroke="rgba(77,208,225,0.45)" stroke-width="2.5"/>
+      <path d="M0 34 C120 17, 240 51, 360 34 C480 17, 600 51, 720 34 C840 17, 960 51, 1080 34 C1200 17, 1320 51, 1440 34 C1560 17, 1680 51, 1800 34 C1920 17, 2040 51, 2160 34 C2280 17, 2400 51, 2520 34 C2640 17, 2760 51, 2880 34" fill="none" stroke="rgba(212,163,115,0.35)" stroke-width="1.5"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── SPICY TOUCHES ── -->
   <section id="spicy-section" class="reveal-section glass-section">
@@ -694,7 +787,14 @@ textarea.f-input{resize:vertical;min-height:100px;}
     </div>
   </section>
 
-  <div class="sand-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move" style="animation-duration:10s">
+      <path d="M0 30 C180 18, 360 42, 540 30 C720 18, 900 42, 1080 30 C1260 18, 1440 42, 1620 30 C1800 18, 1980 42, 2160 30 C2340 18, 2520 42, 2700 30 C2880 18, 3060 42, 3240 30" fill="none" stroke="rgba(212,163,115,0.5)" stroke-width="2"/>
+      <path d="M0 38 C180 26, 360 50, 540 38 C720 26, 900 50, 1080 38 C1260 26, 1440 50, 1620 38 C1800 26, 1980 50, 2160 38 C2340 26, 2520 50, 2700 38 C2880 26, 3060 50, 3240 38" fill="none" stroke="rgba(77,208,225,0.28)" stroke-width="1.2"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── NOTE FROM THE COUPLE ── -->
   <section id="note-section" class="reveal-section glass-section">
@@ -702,14 +802,22 @@ textarea.f-input{resize:vertical;min-height:100px;}
     <h2 class="reveal-child rd2 s-title">💌 Note from the Couple</h2>
     <div class="reveal-child rd3 note-card">
       <p class="note-text">Thank you for being part of our journey, our joy, and the moments that have brought us here.</p>
+      <div class="note-divider"></div>
       <p class="note-text">This day is not just about two people saying "I do"—it's about celebrating love surrounded by the people who matter most.</p>
       <p class="note-text">Here's to ocean waves, sandy toes, endless laughter, and a lifetime of love.</p>
-      <p class="note-text" style="color:var(--teal);">We can't wait to share this beautiful day with you.</p>
+      <p class="note-text" style="color:var(--teal);font-weight:500;">We can't wait to share this beautiful day with you.</p>
       <div class="note-sign">With love,<br/>Omar & Zeina 💍</div>
     </div>
   </section>
 
-  <div class="wave-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move">
+      <path d="M0 27 C120 10, 240 44, 360 27 C480 10, 600 44, 720 27 C840 10, 960 44, 1080 27 C1200 10, 1320 44, 1440 27 C1560 10, 1680 44, 1800 27 C1920 10, 2040 44, 2160 27 C2280 10, 2400 44, 2520 27 C2640 10, 2760 44, 2880 27" fill="none" stroke="rgba(77,208,225,0.45)" stroke-width="2.5"/>
+      <path d="M0 34 C120 17, 240 51, 360 34 C480 17, 600 51, 720 34 C840 17, 960 51, 1080 34 C1200 17, 1320 51, 1440 34 C1560 17, 1680 51, 1800 34 C1920 17, 2040 51, 2160 34 C2280 17, 2400 51, 2520 34 C2640 17, 2760 51, 2880 34" fill="none" stroke="rgba(212,163,115,0.35)" stroke-width="1.5"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── WISHES WALL ── -->
   <section id="wishes-section" class="reveal-section glass-section">
@@ -730,24 +838,199 @@ textarea.f-input{resize:vertical;min-height:100px;}
     <div id="wishes-display" class="wishes-grid" style="margin-top:40px;"></div>
   </section>
 
-  <div class="sand-div"></div>
+<div class="wave-sep">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="wave-move" style="animation-duration:10s">
+      <path d="M0 30 C180 18, 360 42, 540 30 C720 18, 900 42, 1080 30 C1260 18, 1440 42, 1620 30 C1800 18, 1980 42, 2160 30 C2340 18, 2520 42, 2700 30 C2880 18, 3060 42, 3240 30" fill="none" stroke="rgba(212,163,115,0.5)" stroke-width="2"/>
+      <path d="M0 38 C180 26, 360 50, 540 38 C720 26, 900 50, 1080 38 C1260 26, 1440 50, 1620 38 C1800 26, 1980 50, 2160 38 C2340 26, 2520 50, 2700 38 C2880 26, 3060 50, 3240 38" fill="none" stroke="rgba(77,208,225,0.28)" stroke-width="1.2"/>
+    </g>
+  </svg>
+</div>
 
   <!-- ── RSVP ── -->
   <section id="rsvp-section" class="reveal-section glass-section">
     <span class="reveal-child rd1 s-label">Will you attend?</span>
     <h2 class="reveal-child rd2 s-title">RSVP 🌊</h2>
     <p class="reveal-child rd3 s-sub">Please let us know if you can join us before 30/6/2026.</p>
-    <div class="reveal-child rd4 form-wrap">
-      <div style="margin-bottom:20px;">
-        <label class="f-label" for="rsvp-name">Your Name</label>
-        <input type="text" id="rsvp-name" class="f-input" placeholder="Type your name">
+
+    <!-- Bottle + Letter visual — aged weathered bottle -->
+    <div class="reveal-child rd3" id="bottle-wrap" style="position:relative;max-width:380px;margin:32px auto 0;cursor:default;">
+      <!-- SVG Aged Bottle matching photo reference -->
+      <svg id="rsvp-bottle" viewBox="0 0 180 360" width="150" style="display:block;margin:0 auto;filter:drop-shadow(0 12px 32px rgba(80,50,20,0.45)) drop-shadow(0 4px 12px rgba(40,20,0,0.3));transition:transform 1.5s cubic-bezier(0.34,1.2,0.64,1),opacity 1.2s ease;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Aged amber/brown glass gradient like the photo -->
+          <linearGradient id="agedGlassG" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(180,140,80,0.82)"/>
+            <stop offset="25%" stop-color="rgba(140,100,50,0.65)"/>
+            <stop offset="55%" stop-color="rgba(100,70,30,0.72)"/>
+            <stop offset="80%" stop-color="rgba(160,120,60,0.60)"/>
+            <stop offset="100%" stop-color="rgba(80,50,20,0.80)"/>
+          </linearGradient>
+          <linearGradient id="agedGlassG2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgba(220,185,110,0.35)"/>
+            <stop offset="50%" stop-color="rgba(160,115,55,0.20)"/>
+            <stop offset="100%" stop-color="rgba(90,60,25,0.40)"/>
+          </linearGradient>
+          <!-- Old weathered cork -->
+          <linearGradient id="oldCorkG" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#6b4c2a"/>
+            <stop offset="30%" stop-color="#8a6035"/>
+            <stop offset="70%" stop-color="#7a5530"/>
+            <stop offset="100%" stop-color="#4a2c12"/>
+          </linearGradient>
+          <!-- Aged wax seal -->
+          <radialGradient id="waxG" cx="50%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#8b2020"/>
+            <stop offset="60%" stop-color="#6b1515"/>
+            <stop offset="100%" stop-color="#4a0e0e"/>
+          </radialGradient>
+          <!-- Rope/string gradient -->
+          <linearGradient id="ropeG" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#a08050"/>
+            <stop offset="100%" stop-color="#6b5530"/>
+          </linearGradient>
+          <!-- Water inside bottle -->
+          <linearGradient id="waterG" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgba(77,180,210,0.18)"/>
+            <stop offset="100%" stop-color="rgba(30,120,160,0.30)"/>
+          </linearGradient>
+          <!-- Aged paper scroll gradient -->
+          <linearGradient id="paperG" x1="0%" y1="0%" x2="10%" y2="100%">
+            <stop offset="0%" stop-color="#f5e8c0"/>
+            <stop offset="40%" stop-color="#e8d498"/>
+            <stop offset="100%" stop-color="#d4b86a"/>
+          </linearGradient>
+          <filter id="bottleGrit">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise"/>
+            <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+            <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blend"/>
+            <feComponentTransfer in="blend">
+              <feFuncA type="linear" slope="1"/>
+            </feComponentTransfer>
+          </filter>
+          <filter id="glassBlur">
+            <feGaussianBlur stdDeviation="0.8"/>
+          </filter>
+          <clipPath id="bottleBodyClip">
+            <path d="M 72 88 C 50 104, 34 135, 32 180 C 30 230, 34 280, 40 308 C 46 330, 62 342, 90 344 C 118 342, 134 330, 140 308 C 146 280, 150 230, 148 180 C 146 135, 130 104, 108 88 Z"/>
+          </clipPath>
+        </defs>
+
+        <!-- Bottle shadow/depth layer -->
+        <path d="M 74 90 C 52 106, 36 137, 34 182 C 32 232, 36 282, 42 310 C 48 332, 64 344, 90 346 C 116 344, 132 332, 138 310 C 144 282, 148 232, 146 182 C 144 137, 128 106, 106 90 Z" fill="rgba(40,20,0,0.35)"/>
+
+        <!-- Main bottle body — amber aged glass -->
+        <path id="bottle-body" d="M 72 88 C 50 104, 34 135, 32 180 C 30 230, 34 280, 40 308 C 46 330, 62 342, 90 344 C 118 342, 134 330, 140 308 C 146 280, 150 230, 148 180 C 146 135, 130 104, 108 88 Z" fill="url(#agedGlassG)" stroke="rgba(100,65,20,0.6)" stroke-width="2"/>
+
+        <!-- Glass texture overlay -->
+        <path d="M 72 88 C 50 104, 34 135, 32 180 C 30 230, 34 280, 40 308 C 46 330, 62 342, 90 344 C 118 342, 134 330, 140 308 C 146 280, 150 230, 148 180 C 146 135, 130 104, 108 88 Z" fill="url(#agedGlassG2)"/>
+
+        <!-- Water fill inside bottle (sloshing) -->
+        <g clip-path="url(#bottleBodyClip)">
+          <path id="bottle-water" d="M 32 255 C 50 248, 70 260, 90 254 C 110 248, 130 260, 148 255 L 148 346 L 32 346 Z" fill="url(#waterG)">
+            <animateTransform attributeName="transform" type="translate" values="0,0;-6,2;0,0" dur="3s" repeatCount="indefinite"/>
+          </path>
+          <!-- Water wave line -->
+          <path d="M 32 255 C 50 248, 70 260, 90 254 C 110 248, 130 260, 148 255" fill="none" stroke="rgba(100,200,230,0.35)" stroke-width="1.5">
+            <animateTransform attributeName="transform" type="translate" values="0,0;-6,2;0,0" dur="3s" repeatCount="indefinite"/>
+          </path>
+        </g>
+
+        <!-- Aged parchment scroll/letter inside -->
+        <g id="bottle-letter-preview" transform="rotate(-8, 90, 185)">
+          <rect x="62" y="148" width="52" height="72" rx="3" fill="url(#paperG)" stroke="rgba(150,110,50,0.6)" stroke-width="1.2"/>
+          <!-- Paper aged edges/wear marks -->
+          <path d="M 62 148 C 64 145, 68 144, 70 148" fill="rgba(180,140,70,0.5)" stroke="none"/>
+          <path d="M 114 148 C 112 145, 108 144, 106 148" fill="rgba(180,140,70,0.5)" stroke="none"/>
+          <!-- Handwritten lines (like the photo) -->
+          <line x1="67" y1="160" x2="109" y2="155" stroke="rgba(80,45,15,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="67" y1="170" x2="107" y2="166" stroke="rgba(80,45,15,0.55)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="67" y1="180" x2="104" y2="177" stroke="rgba(80,45,15,0.50)" stroke-width="0.9" stroke-linecap="round"/>
+          <line x1="67" y1="189" x2="96" y2="187" stroke="rgba(80,45,15,0.40)" stroke-width="0.8" stroke-linecap="round"/>
+          <!-- Cursive script hint -->
+          <text x="88" y="208" text-anchor="middle" font-family="Dancing Script,cursive" font-size="9" fill="rgba(90,55,20,0.75)" transform="rotate(-5, 88, 208)">RSVP</text>
+          <!-- Paper roll/curl at top -->
+          <path d="M 62 148 C 65 144, 73 142, 78 148 C 73 146, 67 147, 62 148 Z" fill="rgba(240,220,160,0.9)"/>
+          <path d="M 114 148 C 111 144, 103 142, 98 148 C 103 146, 109 147, 114 148 Z" fill="rgba(240,220,160,0.9)"/>
+        </g>
+
+        <!-- Rope/twine tied around scroll (like photo) -->
+        <g opacity="0.85">
+          <path d="M 60 165 C 60 163, 62 162, 64 162 L 116 162 C 118 162, 120 163, 120 165 C 120 167, 118 168, 116 168 L 64 168 C 62 168, 60 167, 60 165 Z" fill="url(#ropeG)" stroke="rgba(80,50,20,0.4)" stroke-width="0.5"/>
+          <!-- Rope knot -->
+          <ellipse cx="90" cy="165" rx="6" ry="5" fill="#8a6030" stroke="rgba(60,35,10,0.5)" stroke-width="0.8"/>
+          <ellipse cx="90" cy="165" rx="3" ry="2.5" fill="#a07845"/>
+          <!-- Rope tails hanging down -->
+          <path d="M 87 170 C 85 176, 83 183, 84 190" fill="none" stroke="url(#ropeG)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 93 170 C 95 178, 94 186, 92 193" fill="none" stroke="url(#ropeG)" stroke-width="1.5" stroke-linecap="round"/>
+        </g>
+
+        <!-- Left glass shine (long highlight like real bottle) -->
+        <path d="M 44 120 C 40 155, 38 195, 42 240" fill="none" stroke="rgba(255,240,200,0.40)" stroke-width="6" stroke-linecap="round"/>
+        <!-- Secondary thin shine -->
+        <path d="M 54 108 C 50 132, 48 160, 51 188" fill="none" stroke="rgba(255,230,170,0.22)" stroke-width="3" stroke-linecap="round"/>
+        <!-- Right edge shadow -->
+        <path d="M 134 120 C 137 155, 138 195, 135 240" fill="none" stroke="rgba(40,20,0,0.25)" stroke-width="5" stroke-linecap="round"/>
+        <!-- Bottom highlight arc -->
+        <path d="M 50 326 C 65 338, 115 338, 130 326" fill="none" stroke="rgba(200,160,80,0.3)" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- Neck — narrower, aged -->
+        <path d="M 74 32 L 68 88 L 112 88 L 106 32 Z" fill="url(#agedGlassG)" stroke="rgba(100,65,20,0.55)" stroke-width="1.8"/>
+        <!-- Neck inner shadow -->
+        <path d="M 76 32 L 70 86 L 80 86 L 78 32 Z" fill="rgba(40,20,0,0.2)"/>
+        <!-- Neck left shine -->
+        <path d="M 72 40 C 70 52, 70 65, 72 76" fill="none" stroke="rgba(220,180,100,0.35)" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- Wax seal drips down neck -->
+        <path d="M 74 32 C 70 36, 68 42, 72 46 C 76 50, 84 48, 86 44 C 88 40, 82 34, 74 32 Z" fill="url(#waxG)" opacity="0.85"/>
+        <path d="M 106 32 C 110 36, 112 42, 108 46 C 104 50, 96 48, 94 44 C 92 40, 98 34, 106 32 Z" fill="url(#waxG)" opacity="0.75"/>
+
+        <!-- Weathered cork — dark, cracked -->
+        <rect x="68" y="8" width="44" height="28" rx="5" fill="url(#oldCorkG)" stroke="rgba(60,35,12,0.7)" stroke-width="1.5"/>
+        <!-- Cork crack lines (aged look) -->
+        <path d="M 76 12 C 77 16, 76 22, 77 28" fill="none" stroke="rgba(40,20,5,0.5)" stroke-width="1" stroke-linecap="round"/>
+        <path d="M 88 10 C 89 15, 88 21, 90 28" fill="none" stroke="rgba(40,20,5,0.4)" stroke-width="0.8" stroke-linecap="round"/>
+        <path d="M 100 12 C 101 17, 100 23, 102 28" fill="none" stroke="rgba(40,20,5,0.35)" stroke-width="0.8" stroke-linecap="round"/>
+        <!-- Cork top cap -->
+        <rect x="72" y="5" width="36" height="10" rx="4" fill="#5a3a18" stroke="rgba(40,20,5,0.6)" stroke-width="1"/>
+        <rect x="76" y="6" width="28" height="7" rx="3" fill="#7a5028"/>
+        <!-- Cork highlight -->
+        <path d="M 76 9 C 82 7, 96 7, 102 9" fill="none" stroke="rgba(160,110,60,0.4)" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Bottle base ring highlight -->
+        <ellipse cx="90" cy="342" rx="42" ry="6" fill="rgba(60,35,10,0.4)"/>
+        <ellipse cx="90" cy="340" rx="38" ry="4" fill="rgba(140,100,50,0.25)"/>
+
+        <!-- Age spots / barnacles on glass -->
+        <circle cx="52" cy="200" r="2.5" fill="rgba(80,55,20,0.35)"/>
+        <circle cx="126" cy="230" r="2" fill="rgba(80,55,20,0.30)"/>
+        <circle cx="46" cy="270" r="1.8" fill="rgba(60,40,15,0.28)"/>
+        <circle cx="130" cy="175" r="1.5" fill="rgba(80,55,20,0.25)"/>
+        <circle cx="58" cy="315" r="2" fill="rgba(70,45,15,0.30)"/>
+        <!-- Algae/seaweed streak -->
+        <path d="M 35 280 C 38 275, 42 278, 40 285" fill="none" stroke="rgba(60,100,40,0.30)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 142 260 C 145 255, 148 259, 146 266" fill="none" stroke="rgba(60,100,40,0.25)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+
+      <!-- Form below bottle -->
+      <div id="rsvp-form-inner" style="margin-top:24px;">
+        <div style="margin-bottom:16px;">
+          <label class="f-label" for="rsvp-name">Your Name</label>
+          <input type="text" id="rsvp-name" class="f-input" placeholder="Type your name">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label class="f-label" for="rsvp-message">Your Message to the Couple</label>
+          <textarea id="rsvp-message" class="f-input" rows="3" placeholder="Write a little something for Omar & Zeina..." style="resize:vertical;min-height:90px;"></textarea>
+        </div>
+        <button class="primary-btn" onclick="submitRSVP()">Send Your Message 🌊</button>
       </div>
-      <button class="primary-btn" onclick="submitRSVP()">I'll be there! 🌊</button>
     </div>
-    <div id="rsvp-confirm" style="margin-top:32px;">
-      <div style="font-size:48px;margin-bottom:12px;">🎉</div>
-      <h3 style="font-family:'Playfair Display',serif;color:var(--teal);font-size:22px;margin-bottom:8px;">Response Received!</h3>
-      <p id="rsvp-confirm-text" style="font-size:15px;color:var(--cream);font-style:italic;line-height:1.6;"></p>
+
+    <!-- Confirmation -->
+    <div id="rsvp-confirm" style="margin-top:32px;display:none;">
+      <div style="font-size:52px;margin-bottom:12px;">🌊</div>
+      <h3 style="font-family:'Playfair Display',serif;color:var(--teal);font-size:22px;margin-bottom:8px;">Message in the Sea!</h3>
+      <p id="rsvp-confirm-text" style="font-size:15px;color:var(--cream);font-style:italic;line-height:1.6;max-width:380px;margin:0 auto;"></p>
     </div>
   </section>
 
@@ -761,16 +1044,37 @@ textarea.f-input{resize:vertical;min-height:100px;}
 </div><!-- /#invitation -->
 
 <script>
-/* ── Starfield ── */
+/* ── Sea Bubbles on Opening Screen ── */
 (function(){
   const c = document.getElementById('dancer-stars');
   if(!c) return;
-  for(let i=0; i<60; i++){
-    const sz = Math.random()*2.5+0.5;
-    const star = document.createElement('div');
-    star.style.cssText = `position:absolute;width:${sz}px;height:${sz}px;border-radius:50%;background:#fff;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${Math.random()*.6+.1};animation:starTwinkle ${2+Math.random()*3}s ${Math.random()*2}s ease-in-out infinite;`;
-    c.appendChild(star);
+  const colors = ['rgba(255,255,255,0.7)','rgba(77,208,225,0.5)','rgba(212,163,115,0.45)','rgba(248,187,208,0.5)'];
+  function spawnBubble() {
+    const sz = Math.random()*12+4;
+    const b = document.createElement('div');
+    const dur = Math.random()*8+6;
+    const delay = Math.random()*2;
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    b.style.cssText = `
+      position:absolute;
+      width:${sz}px;height:${sz}px;
+      border-radius:50%;
+      background:${col};
+      border:1px solid rgba(255,255,255,0.6);
+      left:${Math.random()*100}%;
+      bottom:${Math.random()*20}%;
+      animation:bubbleRise ${dur}s ${delay}s ease-in forwards;
+      pointer-events:none;
+      backdrop-filter:blur(2px);
+      box-shadow:inset 0 -2px 4px rgba(255,255,255,0.4), 0 0 6px ${col};
+    `;
+    c.appendChild(b);
+    setTimeout(()=>b.remove(),(dur+delay)*1000);
   }
+  // initial burst
+  for(let i=0;i<25;i++) setTimeout(spawnBubble, Math.random()*3000);
+  // continuous
+  setInterval(spawnBubble, 400);
 })();
 
 /* ── Music ── */
@@ -813,15 +1117,36 @@ function toggleMusic() {
   }
 }
 
-/* ── Confetti ── */
+/* ── Sea Foam Confetti ── */
 function spawnConfetti() {
-  const colors = ['#26c6da','#f8bbd0','#81c784','#ffecb3','#ffffff'];
-  for(let i=0; i<60; i++){
+  const foamColors = [
+    'rgba(255,255,255,0.9)',
+    'rgba(77,208,225,0.75)',
+    'rgba(38,198,218,0.7)',
+    'rgba(212,163,115,0.6)',
+    'rgba(248,187,208,0.75)',
+    'rgba(129,199,132,0.65)'
+  ];
+  for(let i=0; i<70; i++){
     const el = document.createElement('div');
-    el.className = 'confetti-piece';
-    el.style.cssText = `left:${20+Math.random()*60}%;top:-10px;background:${colors[i%colors.length]};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.4}s;transform:rotate(${Math.random()*360}deg);`;
+    const sz = 6 + Math.random()*14;
+    const col = foamColors[Math.floor(Math.random()*foamColors.length)];
+    const dur = 1.8 + Math.random()*2.2;
+    el.style.cssText = `
+      position:fixed;
+      width:${sz}px;height:${sz}px;
+      border-radius:50%;
+      background:${col};
+      border:1px solid rgba(255,255,255,0.5);
+      box-shadow:inset 0 -2px 4px rgba(0,0,0,0.08), 0 0 8px ${col};
+      left:${10+Math.random()*80}%;
+      bottom:-20px;
+      animation:seaFoamPop ${dur}s ${Math.random()*0.6}s ease-out forwards;
+      pointer-events:none;
+      z-index:999;
+    `;
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 4000);
+    setTimeout(() => el.remove(), (dur+0.8)*1000);
   }
 }
 
@@ -847,6 +1172,46 @@ function openInvitation() {
   }
 
   screen.classList.add('is-opening');
+
+  // Pearl bounce-in: add class after shell opens (~1s), then switch to glow loop
+  setTimeout(() => {
+    const pearl = document.getElementById('pearl');
+    if (!pearl) return;
+    pearl.classList.add('pearl-open');
+    setTimeout(() => {
+      pearl.classList.remove('pearl-open');
+      pearl.classList.add('pearl-glow');
+    }, 950);
+  }, 1100);
+
+  // Spawn sparkles after pearl lands
+  setTimeout(() => {
+    const sparkleG = document.getElementById('pearl-sparkles');
+    if (!sparkleG) return;
+    const sparkleColors = ['#fff9f0','#ffd8c0','#ffe8d0','#ffffff','#ffc8a8','#c8e8ff','#e8d0ff'];
+    const positions = [
+      [130,145],[108,155],[152,155],[100,172],[160,172],[110,190],[150,190],
+      [120,142],[140,142],[95,162],[165,162],[103,182],[158,182]
+    ];
+    positions.forEach(([cx,cy], i) => {
+      const tx = (Math.random()-0.5)*70;
+      const ty = (Math.random()-0.5)*70 - 20;
+      const col = sparkleColors[Math.floor(Math.random()*sparkleColors.length)];
+      const sz = 3 + Math.random()*5;
+      const el = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      const pts = [];
+      for(let p=0;p<8;p++){
+        const a=(p*Math.PI/4)-Math.PI/2;
+        const r=p%2===0?sz:sz*0.4;
+        pts.push(`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`);
+      }
+      el.setAttribute('points', pts.join(' '));
+      el.setAttribute('fill', col);
+      el.style.cssText=`--tx:${tx}px;--ty:${ty}px;opacity:0;animation:sparkleFloat ${0.6+Math.random()*0.8}s ${i*0.06}s ease-out forwards;`;
+      sparkleG.appendChild(el);
+      setTimeout(()=>el.remove(), 2000);
+    });
+  }, 2100);
 
   setTimeout(() => {
     screen.classList.add('is-glowing');
@@ -886,12 +1251,25 @@ function saveDate(e) {
 function startCountdown() {
   const target = new Date('2026-08-30T16:00:00');
   const pad = n => String(n).padStart(2,'0');
+  function setTide(id, val, max) {
+    const el = document.getElementById(id);
+    if(el) el.style.height = Math.max(6, Math.round((val/max)*100)) + '%';
+  }
   function update() {
     const diff = Math.max(0, target - new Date());
-    document.getElementById('cd-days').textContent = pad(Math.floor(diff/86400000));
-    document.getElementById('cd-hours').textContent = pad(Math.floor((diff%86400000)/3600000));
-    document.getElementById('cd-mins').textContent = pad(Math.floor((diff%3600000)/60000));
-    document.getElementById('cd-secs').textContent = pad(Math.floor((diff%60000)/1000));
+    const days = Math.floor(diff/86400000);
+    const hours = Math.floor((diff%86400000)/3600000);
+    const mins = Math.floor((diff%3600000)/60000);
+    const secs = Math.floor((diff%60000)/1000);
+    document.getElementById('cd-days').textContent = pad(days);
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent = pad(mins);
+    document.getElementById('cd-secs').textContent = pad(secs);
+    // tide fills: days/365, hours/24, mins/60, secs/60
+    setTide('tide-days', Math.min(days,365), 365);
+    setTide('tide-hours', hours, 24);
+    setTide('tide-mins', mins, 60);
+    setTide('tide-secs', secs, 60);
   }
   update(); setInterval(update, 1000);
 }
@@ -899,12 +1277,27 @@ function startCountdown() {
 /* ── RSVP ── */
 function submitRSVP() {
   const name=document.getElementById('rsvp-name').value.trim();
+  const msg=document.getElementById('rsvp-message') ? document.getElementById('rsvp-message').value.trim() : '';
   if(!name){ alert('Please enter your name! 🌊'); return; }
-  const txt=`Wonderful, ${name}! We can't wait to celebrate with you by the sea! 🌊💗`;
-  document.getElementById('rsvp-confirm-text').textContent=txt;
-  const c=document.getElementById('rsvp-confirm');
-  c.style.display='block'; c.style.animation='rsvpPop .5s ease both';
+  const txt = msg
+    ? `Your message is drifting across the sea, ${name}! "${msg}" — we'll cherish these words forever 🌊💗`
+    : `Your message is drifting across the sea, ${name}! We can't wait to celebrate with you at La Maison Bleue! 🌊💗`;
+  // animate bottle floating away diagonally like tide carries it
+  const bottle = document.getElementById('rsvp-bottle');
+  const formInner = document.getElementById('rsvp-form-inner');
+  if(bottle){
+    bottle.style.transition = 'transform 2s cubic-bezier(0.34,1.2,0.64,1), opacity 1.8s ease';
+    bottle.style.transform = 'translateX(140%) translateY(-30px) rotate(28deg)';
+    bottle.style.opacity = '0';
+  }
+  if(formInner) formInner.style.display = 'none';
+  setTimeout(()=>{
+    document.getElementById('rsvp-confirm-text').textContent=txt;
+    const c=document.getElementById('rsvp-confirm');
+    c.style.display='block'; c.style.animation='rsvpPop .5s ease both';
+  }, 1000);
   document.getElementById('rsvp-name').value='';
+  if(document.getElementById('rsvp-message')) document.getElementById('rsvp-message').value='';
   spawnConfetti();
 }
 
@@ -917,10 +1310,13 @@ function submitWish() {
   const card = document.createElement('div');
   card.className = 'wish-card';
   card.style.animation = 'rsvpPop 0.6s ease both';
-  card.innerHTML = `<div class="wish-name">${name}</div><div class="wish-text">"${text}"</div>`;
+  // wave wash overlay that fades away
+  card.innerHTML = `<div class="wave-wash"></div><div class="wish-name">${name}</div><div class="wish-text">"${text}"</div>`;
   container.insertBefore(card, container.firstChild);
   document.getElementById('wish-name').value = '';
   document.getElementById('wish-text').value = '';
+  // remove wash overlay after animation
+  setTimeout(()=>{ const w=card.querySelector('.wave-wash'); if(w) w.remove(); }, 1200);
 }
 
 /* ── Scroll Reveal ── */
